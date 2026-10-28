@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Clock, 
   Package, 
@@ -7,14 +7,36 @@ import {
   Crown, 
   TrendingUp, 
   CheckCircle2, 
-  Plus,
-  ArrowUpRight,
-  ShieldCheck,
-  Stethoscope
+  Plus, 
+  ArrowUpRight, 
+  ShieldCheck, 
+  Stethoscope 
 } from 'lucide-react'
+import { api } from './services/api'
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'hora' | 'kits' | 'procedimentos' | 'simulador'>('hora')
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking')
+
+  useEffect(() => {
+    // Testa a comunicacao HTTP (CORS + REST) com o backend Spring Boot
+    api.post('/calculos/hora-clinica', {
+      diasTrabalhoSemana: 5,
+      horasPorDia: 8,
+      percentualOciosidade: 20,
+      metaSalarialLiquida: 10000,
+      custosFixosMensais: 3500,
+      custoSublocacaoPorHora: 0
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setBackendStatus('online')
+        }
+      })
+      .catch(() => {
+        setBackendStatus('offline')
+      })
+  }, [])
 
   return (
     <div className="min-h-screen flex bg-surface-app text-text-body font-sans">
@@ -91,15 +113,15 @@ export function App() {
             <Crown className="w-4 h-4" />
             <span className="text-xs font-bold uppercase tracking-wider">Acesso VIP Lifetime</span>
           </div>
-          <p className="text-xs text-white/90 font-semibold">Dra. Mariana Costa</p>
-          <span className="text-[10px] text-white/50 block mt-0.5">CRO Ativo &bull; Plano Vitalício</span>
+          <p className="text-xs text-white/90 font-semibold">Usuário Teste</p>
+          <span className="text-[10px] text-white/50 block mt-0.5">CRO 00000 &bull; Plano Vitalício</span>
         </div>
       </aside>
 
       {/* Conteúdo Principal */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         
-        {/* Header Superior */}
+        {/* Header Superior com Status de Conexão em Tempo Real */}
         <header className="h-18 bg-surface-card border-b border-brand-border px-8 flex items-center justify-between sticky top-0 z-20">
           <div>
             <h2 className="text-xl font-bold text-text-title tracking-tight">
@@ -112,10 +134,24 @@ export function App() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <span className="px-3.5 py-1.5 rounded-xl bg-brand-badge text-brand-primary text-xs font-bold border border-brand-border flex items-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-status-profit animate-pulse"></span>
-              <span>Consultório Conectado</span>
-            </span>
+            {backendStatus === 'online' && (
+              <span className="px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 flex items-center space-x-2 shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Conectado ao Backend (Porta 8080)</span>
+              </span>
+            )}
+            {backendStatus === 'offline' && (
+              <span className="px-3.5 py-1.5 rounded-xl bg-amber-50 text-amber-800 text-xs font-bold border border-amber-200 flex items-center space-x-2 shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span>Backend Offline (Porta 8080)</span>
+              </span>
+            )}
+            {backendStatus === 'checking' && (
+              <span className="px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold border border-slate-200 flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-slate-400 animate-ping"></span>
+                <span>Verificando conexão...</span>
+              </span>
+            )}
           </div>
         </header>
 
