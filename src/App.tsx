@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { api } from './services/api'
 import { HoraClinicaView } from './components/clinica/HoraClinicaView'
+import { KitsMateriaisView } from './components/kits/KitsMateriaisView'
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'hora' | 'kits' | 'procedimentos' | 'simulador'>('hora')
@@ -153,15 +154,7 @@ export function App() {
         <div className="p-8 max-w-6xl">
           {activeTab === 'hora' && <HoraClinicaView />}
 
-          {activeTab === 'kits' && (
-            <div className="bg-surface-card p-12 rounded-2xl border border-brand-border text-center text-text-muted">
-              <Package className="w-12 h-12 text-brand-accent mx-auto mb-3" />
-              <h3 className="font-bold text-text-title text-lg">Kits de Materiais (Próximo Passo)</h3>
-              <p className="text-xs text-text-muted mt-1 max-w-md mx-auto">
-                No Baby Step 5 & 6, criaremos os cards de kits de materiais rápidos (Kit Resina, Kit Biossegurança, Kit Cirurgia) sem a burocracia de dar baixa em insumos.
-              </p>
-            </div>
-          )}
+          {activeTab === 'kits' && <KitsMateriaisView />}
 
           {activeTab === 'procedimentos' && (
             <div className="bg-surface-card p-12 rounded-2xl border border-brand-border text-center text-text-muted">
