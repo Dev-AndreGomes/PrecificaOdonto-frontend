@@ -10,6 +10,7 @@ import {
 import { api } from './services/api'
 import { HoraClinicaView } from './components/clinica/HoraClinicaView'
 import { KitsMateriaisView } from './components/kits/KitsMateriaisView'
+import { ProcedimentosView } from './components/procedimentos/ProcedimentosView'
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'hora' | 'kits' | 'procedimentos' | 'simulador'>('hora')
@@ -156,15 +157,7 @@ export function App() {
 
           {activeTab === 'kits' && <KitsMateriaisView />}
 
-          {activeTab === 'procedimentos' && (
-            <div className="bg-surface-card p-12 rounded-2xl border border-brand-border text-center text-text-muted">
-              <Activity className="w-12 h-12 text-brand-accent mx-auto mb-3" />
-              <h3 className="font-bold text-text-title text-lg">Catálogo de Procedimentos & Semáforo</h3>
-              <p className="text-xs text-text-muted mt-1 max-w-md mx-auto">
-                No Baby Step 7 & 8, ligaremos o tempo de cadeira aos kits de materiais para gerar a tabela de procedimentos com o Semáforo de Margem.
-              </p>
-            </div>
-          )}
+          {activeTab === 'procedimentos' && <ProcedimentosView />}
 
           {activeTab === 'simulador' && (
             <div className="bg-surface-card p-12 rounded-2xl border border-brand-border text-center text-text-muted">
